@@ -1,0 +1,55 @@
+---
+title: "Meteorite Landings"
+subtitle: Analyzing the distribution in meteorite types
+date: "2023-01-05"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+ 
+ 
+
+## ASK 
+### There are many different types of meteorites. Their categorization is based off mineral composition, structure and chemistry ([1](https://www.nhm.ac.uk/discover/types-of-meteorites.html)). This case-study will be looking at data of recorded fallen meteorites in order to determine what the distribution of types looks like. This distribution will allow us to determine the most and least common meteorite group to have fallen.
+
+## PREPARE
+### We will be using data from [The Meteoritical Society](https://data.nasa.gov/Space-Science/Meteorite-Landings/gh4g-9sfh). This dataset contains records of all known meteorite landings. Information includes: location, mass, type, and year found. In this study, we will be focusing on the information regarding the meteorite type. 
+### There are three main groups of meteorites, stony, stony-iron, and iron, however this dataset goes into more detail and splits these groups further into more classes. For simplicity, we want to just look at the main group they are in.  Therefore, to look at these broader groups, we will need to organize meteorites into their respective groups.
+
+## PROCESS
+### Data was uploaded to GoogleSheets, where each meteorite was categorized into the following types: Chondrite, achondrite, iron, stony-iron, and NA. The NA group represents meteorites listed in the data set that were not classified. Categorization was achieved by using filters and to look at each individual types and then assigning them to their corresponding groups. Research was done to determine which types fell into each of the main group([1](https://www.nhm.ac.uk/discover/types-of-meteorites.html), [2](https://curator.jsc.nasa.gov/education/classification.cfm), [3](https://en.wikipedia.org/wiki/Meteorite_classification)).
+### (Note: chondrite and achondrites are a part of the stony group, however in this case, we will be separating them since they are such large classes within the stony group)
+### Once each meteorite was assigned to a group, RStudio was used to make a table which count the frequency of each group type:
+
+```{r}
+##Add all classification in descending order to a table 
+library(readxl)
+Meteorite_Landings_1_ <- read_excel("~/Downloads/Meteorite_Landings (1).xlsx")
+df <- table(Meteorite_Landings_1_$classification)
+sorted_tab <- df[order(df, decreasing = TRUE)] 
+```
+
+## ANALYSE
+### With the information properly sorted, it can now be plotted:
+
+```{r}
+##Create plot
+bp <- barplot(sorted_tab, main="Meteorite Distribution", xlab="Meteorite type", 
+        ylab="Frequency",
+        ylim=c(0,45000),
+        col=c("red","orange", "yellow", "green", "blue", "purple"), 
+        cex.names = 0.7) 
+text(x=bp, y=sorted_tab + 1000, labels=sorted_tab, cex=0.7)
+
+        
+```
+
+## SHARE/ACT
+### We can clearly see the most common type of meteorite to fall to the earth is chondrites and the least common is stony-iron. Further research is required to answer why there is more chondrite meteorites compared to the other main groups, and why within the stony group, the majority are chondrites and not achondrites. 
+
+## References
+#### 1: https://www.nhm.ac.uk/discover/types-of-meteorites.html
+#### 2: https://curator.jsc.nasa.gov/education/classification.cfm
+#### 3: https://en.wikipedia.org/wiki/Meteorite_classification
+
